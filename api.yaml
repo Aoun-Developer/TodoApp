@@ -3,13 +3,7 @@ info:
   title: TODO APP swagger Docs
   version: "1.0.0"
   description: Swagger UI Docs for Project (TODO APP)
-  contact:
-    name: Abbas
-    url: https://swagger.io
-    email: aoundeveloper@gmail.com
-  license:
-    name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
+
   servers:
     -url: "http://localhost:1000/api-docs/"
     description: This is Local Server
@@ -19,52 +13,31 @@ schemes:
   - http
   - https
 
-paths:
-  # Post api to create new user response => web token
-  /api/auth/createuser:
-      post:
-        summary: Create A New User
-        tags:
-          - Accounts
-        description: API to create new user account
-        produce:
-          - applicaition/json
-        cosume:
-          - applicaition/json
-        parameters:
-          - in: body
-            name: Create User
-            description: Enter Valid Information.
-            schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                email:
-                  type: string
-                  format: email
-                password:
-                  type: string
-        responses:
-          200:
-            description: New User Created
-            schemes:
-              type: object
-              example: Json web token
-          400:
-            description: Bad Request
-          500:
-            description: Internal Server Error
+securityDefinitions:
+  # X-API-Key: abcdef12345
+  APIKeyHeader:
+    type: apiKey
+    in: header
+    name: X-API-Key
+  # /path?api_key=abcdef12345
+  APIKeyQueryParam:
+    type: apiKey
+    in: query
+    name: api_key
 
+security:
+  - APIKeyHeader: []
+paths:
   # Post api to login a user response => web token
   /api/auth/login:
     post:
       summary: Login A User
+      security: []
       tags:
-          - Accounts
+        - Accounts
       description: API to validate and login a user with jwt
       produce:
-          - applicaition/json
+        - applicaition/json
       cosume:
         - applicaition/json
       parameters:
@@ -75,6 +48,7 @@ paths:
             properties:
               email:
                 type: string
+                format: email
               password:
                 type: string
       responses:
@@ -93,16 +67,10 @@ paths:
     post:
       summary: Create A Note
       tags:
-          - Notes
+        - Notes
       description: API to create new note
-      security:
-        - jwt: []
+      security: []
       parameters:
-        - name: token
-          in: path
-          required: true
-          schema:
-            type: string
         - in: body
           name: Create Task
           schema:
@@ -117,74 +85,6 @@ paths:
       responses:
         200:
           description: New Note Created
-          schemes:
-            type: object
-            example: Json web token
-        400:
-          description: Bad Request
-        500:
-          description: Internal Server Error
-
-  # Put api to update a note reponse => note object
-  /api/notes/updatenote/{id}:
-    put:
-      summary: Update A Note
-      tags:
-          - Notes
-      description: API to update a note
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-      responses:
-        200:
-          description: Note Updated
-          schemes:
-            type: object
-            example: Json web token
-        400:
-          description: Bad Request
-        500:
-          description: Internal Server Error
-
-  # Get api to get all notes response => array of notes
-  /api/notes/getnotes:
-    get:
-      summary: Get All Notes
-      tags:
-          - Notes
-      description: API to get all notes
-      responses:
-        200:
-          description: Notes Found
-          schemes:
-            type: object
-            example: Json web token
-        400:
-          description: Bad Request
-        500:
-          description: Internal Server Error
-
-  # Delete api to delete a note response => note object
-  /api/notes/deletenote/{id}:
-    delete:
-      summary: Delete A Note
-      tags:
-          - Notes
-      description: API to delete a note
-      parameters:
-        - in: path
-          name: id
-          required: true
-          schema:
-            type: string
-      responses:
-        200:
-          description: Note Deleted
           schemes:
             type: object
             example: Json web token
